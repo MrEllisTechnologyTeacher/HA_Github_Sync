@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.1.4] - unreleased
+
+### Changed
+- Automated version bump.
+
 ## [0.1.3] - unreleased
 
 ### Changed

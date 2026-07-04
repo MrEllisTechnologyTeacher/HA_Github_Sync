@@ -1,3 +1,3 @@
 """Central version metadata for HA GitHub Sync."""
 
-APP_VERSION = "0.1.3"
+APP_VERSION = "0.1.4"
