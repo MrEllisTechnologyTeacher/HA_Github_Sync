@@ -142,7 +142,7 @@ def main() -> None:
     )
 
     validator = Validator(
-        config_dir="/homeassistant",
+        config_dir="/config",
         allow_paths=config.include_paths,
         deny_paths=config.exclude_paths,
     )
