@@ -7,8 +7,10 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN apk add --no-cache \
     git \
     openssh-client \
-    py3-yaml \
     && rm -rf /var/cache/apk/*
+
+# Install Python deps in the active runtime interpreter
+RUN pip install --no-cache-dir PyYAML
 
 # Copy the sync package into the container as a proper Python package
 COPY sync/ /opt/ha-github-sync/ha_github_sync/

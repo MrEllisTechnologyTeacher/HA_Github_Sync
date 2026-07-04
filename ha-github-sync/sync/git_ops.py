@@ -78,6 +78,13 @@ class GitOps:
             # Scrub token from error messages before logging
             if self._authenticated_url:
                 stderr = stderr.replace(self._authenticated_url, self._display_url)
+            if "403" in stderr or "Write access to repository not granted" in stderr:
+                stderr += (
+                    "\nHint: your GitHub token may lack 'repo' write scope, or may not "
+                    "have access to this repository. Generate a token at "
+                    "https://github.com/settings/tokens with 'repo' (classic) or "
+                    "'Contents: Read and write' (fine-grained)."
+                )
             raise GitError(f"git {args[0]} failed (exit {result.returncode}): {stderr}")
 
         return result
