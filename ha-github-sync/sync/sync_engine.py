@@ -168,6 +168,10 @@ class SyncEngine:
                 return True, None, [], []
 
             changed = self._sync_files_to_repo(tracked)
+            if not changed:
+                logger.info("No tracked file changes detected, nothing to commit")
+                return True, None, [], []
+
             self._write_manifest()
 
             pending = self.git.get_status()
