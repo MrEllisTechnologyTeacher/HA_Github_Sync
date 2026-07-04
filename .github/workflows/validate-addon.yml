@@ -17,6 +17,8 @@ jobs:
   python-lint:
     name: Python lint & type check
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
 
@@ -46,6 +48,8 @@ jobs:
   addon-config:
     name: Validate addon config.yaml
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
 
@@ -72,6 +76,8 @@ jobs:
   unit-tests:
     name: Unit tests
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
 
