@@ -1,0 +1,42 @@
+# HA Config Repository Manifest
+#
+# This file is automatically maintained by the HA GitHub Sync addon.
+# It documents which paths are tracked and which are excluded.
+# Do not edit manually – changes will be overwritten by the addon.
+
+managed_by: ha-github-sync
+version: "0.1.0"
+
+# Paths (relative to /config) that are synced to this repository.
+tracked_paths:
+  - automations.yaml
+  - scripts.yaml
+  - scenes.yaml
+  - groups.yaml
+  - input_boolean.yaml
+  - input_number.yaml
+  - input_select.yaml
+  - input_text.yaml
+  - input_datetime.yaml
+  - packages
+  - blueprints
+  - custom_components
+  - lovelace
+  - dashboards
+
+# Paths (relative to /config) that are explicitly excluded.
+# The addon also enforces a hard-coded deny list regardless of
+# what appears here.
+excluded_paths:
+  - secrets.yaml
+  - .storage
+  - "*.log"
+  - "*.db"
+  - "*.db-shm"
+  - "*.db-wal"
+  - home-assistant_v2.db
+  - .cloud
+  - .HA_VERSION
+  - deps
+  - tts
+  - known_devices.yaml
