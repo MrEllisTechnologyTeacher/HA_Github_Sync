@@ -161,8 +161,11 @@ class SyncEngine:
             tracked = self._collect_tracked_files()
             if not tracked:
                 logger.warning(
-                    "No files matched include_paths – verify addon configuration"
+                    "No files matched include_paths – verify addon configuration. "
+                    "Check that include_paths contains files/directories that exist "
+                    "in your HA config (e.g. automations.yaml, scripts.yaml)."
                 )
+                return True, None, [], []
 
             changed = self._sync_files_to_repo(tracked)
             self._write_manifest()
