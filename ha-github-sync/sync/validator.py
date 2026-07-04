@@ -18,6 +18,24 @@ try:
     import yaml as _yaml
 
     HAS_YAML = True
+
+    class _HaSafeLoader(_yaml.SafeLoader):
+        """SafeLoader variant that accepts Home Assistant custom tags."""
+
+
+    def _construct_ha_tag(
+        loader: _HaSafeLoader, _tag_suffix: str, node: _yaml.Node
+    ) -> object:
+        if isinstance(node, _yaml.ScalarNode):
+            return loader.construct_scalar(node)
+        if isinstance(node, _yaml.SequenceNode):
+            return loader.construct_sequence(node)
+        if isinstance(node, _yaml.MappingNode):
+            return loader.construct_mapping(node)
+        return None
+
+
+    _HaSafeLoader.add_multi_constructor("!", _construct_ha_tag)
 except ImportError:
     HAS_YAML = False
     logger.warning("PyYAML not available – YAML syntax validation disabled")
@@ -118,7 +136,7 @@ class Validator:
             return True, "skipped (PyYAML not available)"
         try:
             with open(file_path, "r", encoding="utf-8") as fh:
-                _yaml.safe_load(fh.read())
+                _yaml.load(fh.read(), Loader=_HaSafeLoader)
             return True, "ok"
         except _yaml.YAMLError as exc:
             return False, str(exc)
