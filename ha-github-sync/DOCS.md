@@ -55,6 +55,7 @@ include_paths:
   - scripts.yaml
   - scenes.yaml
   - groups.yaml
+  - customize.yaml
   - input_boolean.yaml
   - input_number.yaml
   - input_select.yaml

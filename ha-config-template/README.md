@@ -12,6 +12,7 @@ and is the authoritative source for **GitHub Copilot-assisted edits**.
 ├── scripts.yaml             # HA scripts
 ├── scenes.yaml              # HA scenes
 ├── groups.yaml              # HA groups
+├── customize.yaml           # Entity name, icon, and attribute overrides
 ├── input_boolean.yaml       # Input booleans
 ├── input_number.yaml        # Input numbers
 ├── input_select.yaml        # Input selects
@@ -49,6 +50,7 @@ and is the authoritative source for **GitHub Copilot-assisted edits**.
 ### ✅ Safe to edit automatically
 
 - `automations.yaml`, `scripts.yaml`, `scenes.yaml`
+- `customize.yaml` – entity friendly names, icons, and attribute overrides
 - `input_*.yaml` helpers
 - Files under `packages/`
 - Files under `blueprints/`
@@ -91,3 +93,64 @@ Before merging a PR, ensure:
 ## Questions & issues
 
 Open an issue at https://github.com/MrEllisTechnologyTeacher/HA_Github_Sync
+
+## Editing entity names and icons
+
+Entity attributes (friendly name, icon, hidden state, etc.) can be set for
+**any** entity directly from this repository — no need to change them through
+the Home Assistant UI.
+
+> **Note:** Changes made via the HA UI "Entity settings" dialog are stored in
+> `.storage/core.entity_registry`, which is intentionally excluded from sync
+> (it contains runtime state and privacy-sensitive data).  
+> The correct, version-controlled way to customise entities is `customize.yaml`.
+
+### Prerequisites
+
+Your `configuration.yaml` must include:
+
+```yaml
+homeassistant:
+  customize: !include customize.yaml
+```
+
+If this line is already present, no further changes to `configuration.yaml`
+are needed.  If `customize.yaml` does not yet exist in the repo it will be
+created by the sync addon on the next outbound cycle, or you can create it
+with the content below.
+
+### customize.yaml format
+
+```yaml
+# customize.yaml
+# Key: entity_id (domain.object_id)
+light.living_room_main:
+  friendly_name: Living Room Ceiling Light
+  icon: mdi:ceiling-light
+
+switch.garden_pump:
+  friendly_name: Garden Irrigation Pump
+  icon: mdi:water-pump
+
+sensor.outdoor_temperature:
+  friendly_name: Outside Temperature
+  icon: mdi:thermometer
+
+binary_sensor.front_door:
+  friendly_name: Front Door
+  device_class: door
+```
+
+### Supported attributes
+
+| Attribute | Description |
+|-----------|-------------|
+| `friendly_name` | Display name shown in the HA UI |
+| `icon` | Any [Material Design Icon](https://pictogrammers.com/library/mdi/) (`mdi:...`) |
+| `hidden` | `true` to hide the entity from default views |
+| `device_class` | Override the device class (e.g. `door`, `motion`, `temperature`) |
+| `unit_of_measurement` | Override the unit shown for sensor entities |
+| `entity_picture` | URL to a custom entity image |
+
+After merging a PR that modifies `customize.yaml`, restart Home Assistant (or
+use **Developer Tools → YAML → Reload Customize**) to apply the changes.
