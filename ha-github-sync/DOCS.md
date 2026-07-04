@@ -26,6 +26,11 @@ HA GitHub Sync is a Home Assistant Add-on that:
    ```
 3. Find **HA GitHub Sync** in the store and click **Install**.
 
+## Versioning
+
+Addon versioning is automated on `main`. Every push that changes addon files
+triggers a patch bump and creates a matching git tag (for example `v0.1.1`).
+
 ## Configuration
 
 | Option | Default | Description |
