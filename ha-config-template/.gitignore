@@ -1,0 +1,51 @@
+# ===========================================================
+# Default .gitignore for a Home Assistant config repository
+# managed by HA GitHub Sync.
+#
+# Edit this file to adjust what is excluded from version
+# control.  The addon will NOT overwrite a .gitignore that
+# already exists in the repository.
+# ===========================================================
+
+# --- Secrets (MUST never be committed) ----------------------
+secrets.yaml
+secrets.yml
+
+# --- HA runtime & internal storage --------------------------
+.storage/
+home-assistant_v2.db
+home-assistant_v2.db-shm
+home-assistant_v2.db-wal
+*.db
+*.db-shm
+*.db-wal
+
+# --- Logs ---------------------------------------------------
+*.log
+home-assistant.log
+home-assistant.log.1
+home-assistant.log.fault
+
+# --- HA generated / cache directories ----------------------
+deps/
+tts/
+.cloud/
+.HA_VERSION
+OZW_Log.txt
+
+# --- Privacy-sensitive files --------------------------------
+known_devices.yaml       # Contains MAC addresses
+
+# --- OS / editor artifacts ----------------------------------
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+
+# --- Python artifacts (if custom components are tracked) ----
+__pycache__/
+*.py[cod]
+*.pyo

@@ -1,0 +1,68 @@
+name: "HA GitHub Sync"
+version: "0.1.0"
+slug: "ha_github_sync"
+description: "Sync and backup your Home Assistant configuration to a GitHub repository, enabling agentic editing with GitHub Copilot."
+url: "https://github.com/MrEllisTechnologyTeacher/HA_Github_Sync"
+arch:
+  - aarch64
+  - amd64
+  - armhf
+  - armv7
+  - i386
+init: false
+map:
+  - config:rw
+homeassistant_api: false
+hassio_api: false
+options:
+  github_repo: ""
+  github_token: ""
+  branch: "main"
+  commit_author_name: "HA GitHub Sync"
+  commit_author_email: "ha-sync@localhost"
+  sync_interval: 3600
+  mode: "export"
+  dry_run: false
+  validate_on_sync: true
+  include_paths:
+    - "automations.yaml"
+    - "scripts.yaml"
+    - "scenes.yaml"
+    - "groups.yaml"
+    - "input_boolean.yaml"
+    - "input_number.yaml"
+    - "input_select.yaml"
+    - "input_text.yaml"
+    - "input_datetime.yaml"
+    - "packages"
+    - "blueprints"
+    - "custom_components"
+    - "lovelace"
+    - "dashboards"
+  exclude_paths:
+    - "secrets.yaml"
+    - ".storage"
+    - "*.log"
+    - "*.db"
+    - "*.db-shm"
+    - "*.db-wal"
+    - "home-assistant_v2.db"
+    - ".cloud"
+    - ".HA_VERSION"
+    - "deps"
+    - "tts"
+    - "known_devices.yaml"
+schema:
+  github_repo: "str"
+  github_token: "password"
+  branch: "str"
+  commit_author_name: "str"
+  commit_author_email: "str"
+  sync_interval: "int(60,86400)"
+  mode: "list(export|bidirectional)"
+  dry_run: "bool"
+  validate_on_sync: "bool"
+  include_paths:
+    - "str"
+  exclude_paths:
+    - "str"

@@ -1,0 +1,98 @@
+name: Validate Add-on
+
+on:
+  push:
+    paths:
+      - "ha-github-sync/**"
+      - ".github/workflows/validate-addon.yml"
+  pull_request:
+    paths:
+      - "ha-github-sync/**"
+      - ".github/workflows/validate-addon.yml"
+
+jobs:
+  # ---------------------------------------------------------------
+  # Lint and type-check the Python sync package
+  # ---------------------------------------------------------------
+  python-lint:
+    name: Python lint & type check
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install linting tools
+        run: pip install flake8 mypy pyyaml
+
+      - name: flake8
+        run: |
+          flake8 ha-github-sync/sync/ \
+            --max-line-length=100 \
+            --extend-ignore=E203,W503
+
+      - name: mypy
+        run: |
+          mypy ha-github-sync/sync/ \
+            --ignore-missing-imports \
+            --strict
+
+  # ---------------------------------------------------------------
+  # Validate the addon config.yaml schema
+  # ---------------------------------------------------------------
+  addon-config:
+    name: Validate addon config.yaml
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install PyYAML
+        run: pip install pyyaml
+
+      - name: Check config.yaml is valid YAML
+        run: python -c "import yaml; yaml.safe_load(open('ha-github-sync/config.yaml'))"
+
+      - name: Check build.yaml is valid YAML
+        run: python -c "import yaml; yaml.safe_load(open('ha-github-sync/build.yaml'))"
+
+      - name: Check ha-config-template manifest is valid YAML
+        run: python -c "import yaml; yaml.safe_load(open('ha-config-template/manifest.yaml'))"
+
+  # ---------------------------------------------------------------
+  # Run unit tests
+  # ---------------------------------------------------------------
+  unit-tests:
+    name: Unit tests
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install pyyaml pytest
+
+      - name: Run tests
+        run: |
+          if [ -d "tests/" ]; then
+            pytest tests/ -v
+          else
+            echo "No tests directory yet – skipping"
+          fi
