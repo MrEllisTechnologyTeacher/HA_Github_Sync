@@ -13,6 +13,7 @@ from typing import List, Optional, Tuple
 from .git_ops import GitError, GitOps
 from .status import StatusTracker
 from .validator import Validator
+from .version import APP_VERSION
 
 logger = logging.getLogger("ha_github_sync.engine")
 
@@ -95,7 +96,7 @@ class SyncEngine:
         """Write the sync manifest into the repo root."""
         manifest = {
             "managed_by": "ha-github-sync",
-            "version": "0.1.0",
+            "version": APP_VERSION,
             "tracked_paths": self.include_paths,
             "excluded_paths": self.exclude_paths,
             "last_generated": datetime.now(timezone.utc).isoformat(),

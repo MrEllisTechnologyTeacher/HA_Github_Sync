@@ -1,0 +1,49 @@
+name: Auto Version Bump
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "ha-github-sync/**"
+      - ".github/scripts/bump_addon_version.py"
+      - ".github/workflows/auto-version.yml"
+  workflow_dispatch:
+
+jobs:
+  bump-version:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Bump addon patch version
+        id: bump
+        run: |
+          new_version="$(python3 .github/scripts/bump_addon_version.py)"
+          echo "new_version=${new_version}" >> "$GITHUB_OUTPUT"
+
+      - name: Commit and tag version bump
+        run: |
+          if git diff --quiet; then
+            echo "No version changes to commit."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add ha-github-sync/config.yaml ha-github-sync/sync/version.py ha-github-sync/CHANGELOG.md
+          git commit -m "chore: bump addon version to v${{ steps.bump.outputs.new_version }}"
+          git tag "v${{ steps.bump.outputs.new_version }}"
+          git push origin HEAD:main --follow-tags
+

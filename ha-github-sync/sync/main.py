@@ -19,6 +19,7 @@ from .git_ops import GitOps
 from .status import StatusTracker
 from .sync_engine import SyncEngine
 from .validator import Validator
+from .version import APP_VERSION
 
 logging.basicConfig(
     level=logging.INFO,
@@ -110,7 +111,7 @@ def main() -> None:
     signal.signal(signal.SIGTERM, _handle_signal)
     signal.signal(signal.SIGINT, _handle_signal)
 
-    logger.info("HA GitHub Sync v0.1.0 starting")
+    logger.info("HA GitHub Sync v%s starting", APP_VERSION)
 
     # ---- Load config -------------------------------------------------
     try:
