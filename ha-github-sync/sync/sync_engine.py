@@ -16,8 +16,8 @@ from .validator import Validator
 
 logger = logging.getLogger("ha_github_sync.engine")
 
-# The HA config directory is bind-mounted here by the supervisor
-HA_CONFIG_DIR = "/homeassistant"
+# The HA config directory bind-mounted by Home Assistant Supervisor
+HA_CONFIG_DIR = "/config"
 # Internal manifest file tracked inside the repo
 MANIFEST_FILE = ".ha-sync-manifest.json"
 
@@ -162,7 +162,7 @@ class SyncEngine:
             if not tracked:
                 logger.warning(
                     "No files matched include_paths – verify addon configuration. "
-                    "Check that include_paths entries exist in /homeassistant."
+                    "Check that include_paths entries exist in /config."
                 )
                 return True, None, [], []
 
