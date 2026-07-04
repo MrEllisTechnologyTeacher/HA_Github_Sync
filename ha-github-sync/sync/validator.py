@@ -22,7 +22,6 @@ try:
     class _HaSafeLoader(_yaml.SafeLoader):
         """SafeLoader variant that accepts Home Assistant custom tags."""
 
-
     def _construct_ha_tag(
         loader: _HaSafeLoader, _tag_suffix: str, node: _yaml.Node
     ) -> object:
@@ -33,7 +32,6 @@ try:
         if isinstance(node, _yaml.MappingNode):
             return loader.construct_mapping(node)
         return None
-
 
     _HaSafeLoader.add_multi_constructor("!", _construct_ha_tag)
 except ImportError:
