@@ -12,6 +12,7 @@ import os
 import signal
 import sys
 import time
+from types import FrameType
 
 from .config import load_config
 from .git_ops import GitOps
@@ -37,7 +38,7 @@ _shutdown = False
 # Signal handling
 # ------------------------------------------------------------------
 
-def _handle_signal(sig, _frame):
+def _handle_signal(sig: int, _frame: FrameType | None) -> None:
     global _shutdown
     logger.info("Signal %s received – shutting down gracefully", sig)
     _shutdown = True
@@ -62,7 +63,7 @@ def _acquire_lock() -> bool:
     return True
 
 
-def _release_lock():
+def _release_lock() -> None:
     try:
         os.unlink(LOCK_FILE)
     except OSError:
@@ -73,7 +74,7 @@ def _release_lock():
 # Single sync cycle
 # ------------------------------------------------------------------
 
-def _run_sync_cycle(engine: SyncEngine, mode: str):
+def _run_sync_cycle(engine: SyncEngine, mode: str) -> None:
     logger.info("=== Sync cycle start (mode=%s) ===", mode)
 
     if mode in ("export", "bidirectional"):
@@ -105,7 +106,7 @@ def _run_sync_cycle(engine: SyncEngine, mode: str):
 # Main
 # ------------------------------------------------------------------
 
-def main():
+def main() -> None:
     signal.signal(signal.SIGTERM, _handle_signal)
     signal.signal(signal.SIGINT, _handle_signal)
 

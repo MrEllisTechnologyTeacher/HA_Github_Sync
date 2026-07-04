@@ -10,7 +10,7 @@ import logging
 import os
 import re
 import subprocess
-from typing import List, Optional, Tuple
+from typing import List, Tuple
 
 logger = logging.getLogger("ha_github_sync.validator")
 
@@ -67,7 +67,7 @@ class Validator:
         self.config_dir = config_dir
         self.allow_paths = allow_paths
         # Merge user-supplied deny list with the hard-coded always-deny list
-        seen: set = set()
+        seen: set[str] = set()
         merged = []
         for p in list(deny_paths) + list(ALWAYS_DENY):
             if p not in seen:

@@ -77,7 +77,8 @@ def load_config() -> SyncConfig:
     if not github_token:
         raise ValueError(
             "github_token is required. "
-            "Create a GitHub Personal Access Token with repo scope and set it in the addon configuration."
+            "Create a GitHub Personal Access Token with repo scope "
+            "and set it in the addon configuration."
         )
 
     mode = opts.get("mode", "export")
@@ -88,8 +89,12 @@ def load_config() -> SyncConfig:
         github_repo=github_repo,
         github_token=github_token,
         branch=opts.get("branch", "main") or "main",
-        commit_author_name=opts.get("commit_author_name", "HA GitHub Sync") or "HA GitHub Sync",
-        commit_author_email=opts.get("commit_author_email", "ha-sync@localhost") or "ha-sync@localhost",
+        commit_author_name=(
+            opts.get("commit_author_name", "HA GitHub Sync") or "HA GitHub Sync"
+        ),
+        commit_author_email=(
+            opts.get("commit_author_email", "ha-sync@localhost") or "ha-sync@localhost"
+        ),
         sync_interval=int(opts.get("sync_interval", 3600)),
         mode=mode,
         dry_run=bool(opts.get("dry_run", False)),

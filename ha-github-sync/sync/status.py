@@ -3,7 +3,7 @@ import json
 import logging
 import os
 from datetime import datetime, timezone
-from typing import List, Optional
+from typing import List, Optional, cast
 
 logger = logging.getLogger("ha_github_sync.status")
 
@@ -14,8 +14,8 @@ ADDON_VERSION = "0.1.0"
 class StatusTracker:
     """Reads and writes the addon status file."""
 
-    def __init__(self):
-        self._data: dict = {
+    def __init__(self) -> None:
+        self._data: dict[str, object] = {
             "addon_version": ADDON_VERSION,
             "mode": None,
             "last_sync": None,
@@ -29,16 +29,16 @@ class StatusTracker:
         }
         self._load()
 
-    def _load(self):
+    def _load(self) -> None:
         if os.path.exists(STATUS_FILE):
             try:
                 with open(STATUS_FILE, "r", encoding="utf-8") as f:
-                    saved = json.load(f)
+                    saved = cast(dict[str, object], json.load(f))
                 self._data.update(saved)
             except Exception as exc:
                 logger.warning("Could not load status file: %s", exc)
 
-    def save(self):
+    def save(self) -> None:
         try:
             with open(STATUS_FILE, "w", encoding="utf-8") as f:
                 json.dump(self._data, f, indent=2, default=str)
@@ -49,11 +49,11 @@ class StatusTracker:
     # Mutation helpers
     # ------------------------------------------------------------------
 
-    def set_mode(self, mode: str):
+    def set_mode(self, mode: str) -> None:
         self._data["mode"] = mode
         self.save()
 
-    def set_error(self, error: str):
+    def set_error(self, error: str) -> None:
         self._data["errors"] = [error]
         self.save()
 
@@ -67,7 +67,7 @@ class StatusTracker:
         conflict_state: bool,
         mode: str,
         errors: List[str],
-    ):
+    ) -> None:
         self._data.update(
             {
                 "last_sync": datetime.now(timezone.utc).isoformat(),
@@ -84,5 +84,5 @@ class StatusTracker:
         self.save()
 
     @property
-    def data(self) -> dict:
+    def data(self) -> dict[str, object]:
         return dict(self._data)

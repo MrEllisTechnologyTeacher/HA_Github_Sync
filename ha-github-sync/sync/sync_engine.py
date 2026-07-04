@@ -91,7 +91,7 @@ class SyncEngine:
             changed.append(rel_path)
         return changed
 
-    def _write_manifest(self):
+    def _write_manifest(self) -> None:
         """Write the sync manifest into the repo root."""
         manifest = {
             "managed_by": "ha-github-sync",
