@@ -22,7 +22,6 @@ try:
     class _HaSafeLoader(_yaml.SafeLoader):
         """SafeLoader variant that accepts Home Assistant custom tags."""
 
-
     def _construct_ha_tag(
         loader: _HaSafeLoader, _tag_suffix: str, node: _yaml.Node
     ) -> object:
@@ -34,8 +33,7 @@ try:
             return loader.construct_mapping(node)
         return None
 
-
-    _HaSafeLoader.add_multi_constructor("!", _construct_ha_tag)
+    _HaSafeLoader.add_multi_constructor("!", _construct_ha_tag)  # type: ignore[no-untyped-call]
 except ImportError:
     HAS_YAML = False
     logger.warning("PyYAML not available – YAML syntax validation disabled")

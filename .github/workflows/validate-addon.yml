@@ -28,7 +28,7 @@ jobs:
           python-version: "3.11"
 
       - name: Install linting tools
-        run: pip install flake8 mypy pyyaml
+        run: pip install flake8 mypy pyyaml types-PyYAML
 
       - name: flake8
         run: |
