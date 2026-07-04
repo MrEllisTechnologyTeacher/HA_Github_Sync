@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.1.1] - unreleased
+
+### Changed
+- Automated version bump.
+
 ## [0.1.0] - 2026-07-04
 
 ### Added

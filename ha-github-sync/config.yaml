@@ -1,5 +1,5 @@
 name: "HA GitHub Sync"
-version: "0.1.0"
+version: "0.1.1"
 slug: "ha_github_sync"
 description: "Sync and backup your Home Assistant configuration to a GitHub repository, enabling agentic editing with GitHub Copilot."
 url: "https://github.com/MrEllisTechnologyTeacher/HA_Github_Sync"
