@@ -22,6 +22,7 @@ class StatusTracker:
             "last_commit": None,
             "last_commit_message": None,
             "changed_files": [],
+            "unmatched_paths": [],
             "validation_result": None,
             "apply_result": None,
             "conflict_state": False,
@@ -67,6 +68,7 @@ class StatusTracker:
         conflict_state: bool,
         mode: str,
         errors: List[str],
+        unmatched_paths: Optional[List[str]] = None,
     ) -> None:
         self._data.update(
             {
@@ -74,6 +76,7 @@ class StatusTracker:
                 "last_commit": commit,
                 "last_commit_message": message,
                 "changed_files": changed_files,
+                "unmatched_paths": unmatched_paths or [],
                 "validation_result": validation_result,
                 "apply_result": apply_result,
                 "conflict_state": conflict_state,
