@@ -50,12 +50,16 @@ class SyncEngine:
     # File collection helpers
     # ------------------------------------------------------------------
 
-    def _collect_tracked_files(self) -> List[Tuple[str, str]]:
+    def _collect_tracked_files(
+        self,
+    ) -> Tuple[List[Tuple[str, str]], List[str]]:
         """
         Walk the HA config directory and return all (abs_src, rel_path)
-        tuples that pass the include/exclude filter.
+        tuples that pass the include/exclude filter, plus a list of
+        include_paths entries that could not be found on the filesystem.
         """
         tracked: List[Tuple[str, str]] = []
+        unmatched: List[str] = []
         for entry in self.include_paths:
             src = os.path.join(HA_CONFIG_DIR, entry)
             if os.path.isfile(src):
@@ -69,7 +73,13 @@ class SyncEngine:
                         rel = os.path.relpath(full, HA_CONFIG_DIR)
                         if self.validator.is_path_allowed(rel):
                             tracked.append((full, rel))
-        return tracked
+            else:
+                logger.warning(
+                    "include_paths entry not found in /config (skipping): %s",
+                    entry,
+                )
+                unmatched.append(entry)
+        return tracked, unmatched
 
     def _sync_files_to_repo(
         self, tracked: List[Tuple[str, str]]
@@ -92,13 +102,14 @@ class SyncEngine:
             changed.append(rel_path)
         return changed
 
-    def _write_manifest(self) -> None:
+    def _write_manifest(self, unmatched_paths: Optional[List[str]] = None) -> None:
         """Write the sync manifest into the repo root."""
         manifest = {
             "managed_by": "ha-github-sync",
             "version": APP_VERSION,
             "tracked_paths": self.include_paths,
             "excluded_paths": self.exclude_paths,
+            "unmatched_paths": unmatched_paths or [],
             "last_generated": datetime.now(timezone.utc).isoformat(),
         }
         path = os.path.join(self.repo_dir, MANIFEST_FILE)
@@ -159,7 +170,7 @@ class SyncEngine:
         """
         errors: List[str] = []
         try:
-            tracked = self._collect_tracked_files()
+            tracked, unmatched = self._collect_tracked_files()
             if not tracked:
                 logger.warning(
                     "No files matched include_paths – verify addon configuration. "
@@ -172,7 +183,7 @@ class SyncEngine:
                 logger.info("No tracked file changes detected, nothing to commit")
                 return True, None, [], []
 
-            self._write_manifest()
+            self._write_manifest(unmatched_paths=unmatched)
 
             pending = self.git.get_status()
             if not pending:
@@ -201,6 +212,7 @@ class SyncEngine:
                         conflict_state=False,
                         mode=self.mode,
                         errors=errors,
+                        unmatched_paths=unmatched,
                     )
                     return False, None, changed, errors
                 validation_result = "pass"
@@ -220,6 +232,7 @@ class SyncEngine:
                     conflict_state=False,
                     mode=self.mode,
                     errors=[],
+                    unmatched_paths=unmatched,
                 )
                 return True, None, changed, []
 
@@ -239,6 +252,7 @@ class SyncEngine:
                 conflict_state=False,
                 mode=self.mode,
                 errors=[],
+                unmatched_paths=unmatched,
             )
             return True, commit_hash, changed, []
 
